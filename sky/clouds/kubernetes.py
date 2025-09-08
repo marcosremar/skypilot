@@ -86,8 +86,8 @@ class Kubernetes(clouds.Cloud):
              'cluster.'),
     }
 
-    IMAGE_CPU = 'skypilot:custom-cpu-ubuntu-2004'
-    IMAGE_GPU = 'skypilot:custom-gpu-ubuntu-2004'
+    IMAGE_CPU = 'seungjinassemble/skypirate:k8s-new-image'
+    IMAGE_GPU = 'seungjinassemble/skypirate:k8s-new-image-gpu'
 
     PROVISIONER_VERSION = clouds.ProvisionerVersion.SKYPILOT
     STATUS_VERSION = clouds.StatusVersion.SKYPILOT
@@ -510,9 +510,10 @@ class Kubernetes(clouds.Cloud):
             else:
                 # Select image based on whether we are using GPUs or not.
                 image_id = self.IMAGE_GPU if acc_count > 0 else self.IMAGE_CPU
-                # Get the container image ID from the service catalog.
-                image_id = catalog.get_image_id_from_tag(image_id,
-                                                         clouds='kubernetes')
+                # TEST: images are actually docker images for this test.
+                # # Get the container image ID from the service catalog.
+                # image_id = catalog.get_image_id_from_tag(image_id,
+                #                                         clouds='kubernetes')
             return image_id
 
         image_id = _get_image_id(resources)
