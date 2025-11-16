@@ -21,6 +21,7 @@ runs:
         version: "latest"
         python-version: ${{ inputs.python-version }}
     - name: Install dependencies
+      shell: bash
       run: |
         uv venv --seed ~/test-env
         source ~/test-env/bin/activate
@@ -30,6 +31,7 @@ runs:
         uv pip install -e ".[all]"
         uv pip install pytest pytest-xdist pytest-env>=0.6 pytest-asyncio memory-profiler==0.61.0
     - name: Run tests with pytest
+      shell: bash
       env:
         TEST_PATH: ${{ inputs.test-path }}
         TEST_NAME: ${{ inputs.test-name }}
