@@ -113,29 +113,6 @@ def encode_queue(
     return response
 
 
-@register_encoder('status_kubernetes')
-def encode_status_kubernetes(
-    return_value: Tuple[
-        List['kubernetes_utils.KubernetesSkyPilotClusterInfoPayload'],
-        List['kubernetes_utils.KubernetesSkyPilotClusterInfoPayload'],
-        List[responses.ManagedJobRecord], Optional[str]]
-) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[Dict[str, Any]],
-           Optional[str]]:
-    all_clusters, unmanaged_clusters, all_jobs, context = return_value
-    encoded_all_clusters = []
-    encoded_unmanaged_clusters = []
-    for cluster in all_clusters:
-        encoded_cluster = dataclasses.asdict(cluster)
-        encoded_cluster['status'] = encoded_cluster['status'].value
-        encoded_all_clusters.append(encoded_cluster)
-    for cluster in unmanaged_clusters:
-        encoded_cluster = dataclasses.asdict(cluster)
-        encoded_cluster['status'] = encoded_cluster['status'].value
-        encoded_unmanaged_clusters.append(encoded_cluster)
-    all_jobs = [job.model_dump(by_alias=True) for job in all_jobs]
-    return encoded_all_clusters, encoded_unmanaged_clusters, all_jobs, context
-
-
 @register_encoder('jobs.queue')
 def encode_jobs_queue(jobs: List[dict],) -> List[Dict[str, Any]]:
     for job in jobs:

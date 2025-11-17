@@ -755,22 +755,6 @@ async def kubernetes_node_info(
 
 @usage_lib.entrypoint
 @annotations.client_api
-async def status_kubernetes(
-    stream_logs: Optional[StreamConfig] = DEFAULT_STREAM_CONFIG
-) -> Tuple[List['kubernetes_utils.KubernetesSkyPilotClusterInfoPayload'],
-           List['kubernetes_utils.KubernetesSkyPilotClusterInfoPayload'],
-           List[Dict[str, Any]], Optional[str]]:
-    """Async version of status_kubernetes() that gets all SkyPilot clusters
-      and jobs in the Kubernetes cluster."""
-    request_id = await context_utils.to_thread(sdk.status_kubernetes)
-    if stream_logs is not None:
-        return await _stream_and_get(request_id, stream_logs)
-    else:
-        return await get(request_id)
-
-
-@usage_lib.entrypoint
-@annotations.client_api
 async def api_cancel(
         request_ids: Optional[Union[str, List[str]]] = None,
         all_users: bool = False,

@@ -66,29 +66,6 @@ def decode_status(
     return response
 
 
-@register_decoders('status_kubernetes')
-def decode_status_kubernetes(
-    return_value: Tuple[List[Dict[str, Any]], List[Dict[str, Any]],
-                        List[Dict[str, Any]], Optional[str]]
-) -> Tuple[List[kubernetes_utils.KubernetesSkyPilotClusterInfoPayload],
-           List[kubernetes_utils.KubernetesSkyPilotClusterInfoPayload],
-           List[responses.ManagedJobRecord], Optional[str]]:
-    (encoded_all_clusters, encoded_unmanaged_clusters, all_jobs,
-     context) = return_value
-    all_clusters = []
-    for cluster in encoded_all_clusters:
-        cluster['status'] = status_lib.ClusterStatus(cluster['status'])
-        all_clusters.append(
-            kubernetes_utils.KubernetesSkyPilotClusterInfoPayload(**cluster))
-    unmanaged_clusters = []
-    for cluster in encoded_unmanaged_clusters:
-        cluster['status'] = status_lib.ClusterStatus(cluster['status'])
-        unmanaged_clusters.append(
-            kubernetes_utils.KubernetesSkyPilotClusterInfoPayload(**cluster))
-    all_jobs = [responses.ManagedJobRecord(**job) for job in all_jobs]
-    return all_clusters, unmanaged_clusters, all_jobs, context
-
-
 @register_decoders('launch', 'exec', 'jobs.launch')
 def decode_launch(
     return_value: Dict[str, Any]

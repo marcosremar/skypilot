@@ -1938,38 +1938,6 @@ def kubernetes_node_info(
     return server_common.get_request_id(response)
 
 
-@usage_lib.entrypoint
-@server_common.check_server_healthy_or_start
-@annotations.client_api
-def status_kubernetes() -> server_common.RequestId[
-    Tuple[List['kubernetes_utils.KubernetesSkyPilotClusterInfoPayload'],
-          List['kubernetes_utils.KubernetesSkyPilotClusterInfoPayload'],
-          List[responses.ManagedJobRecord], Optional[str]]]:
-    """Gets all SkyPilot clusters and jobs in the Kubernetes cluster.
-
-    Managed jobs and services are also included in the clusters returned.
-    The caller must parse the controllers to identify which clusters are run
-    as managed jobs or services.
-
-    Returns:
-        The request ID of the status request.
-
-    Request Returns:
-        A tuple containing:
-        - all_clusters: List of KubernetesSkyPilotClusterInfoPayload with info
-            for all clusters, including managed jobs, services and controllers.
-        - unmanaged_clusters: List of KubernetesSkyPilotClusterInfoPayload with
-            info for all clusters excluding managed jobs and services.
-            Controllers are included.
-        - all_jobs: List of managed jobs from all controllers. Each entry is a
-            dictionary job info, see jobs.queue_from_kubernetes_pod for details.
-        - context: Kubernetes context used to fetch the cluster information.
-    """
-    response = server_common.make_authenticated_request('GET',
-                                                        '/status_kubernetes')
-    return server_common.get_request_id(response)
-
-
 # === API request APIs ===
 @usage_lib.entrypoint
 @annotations.client_api

@@ -796,18 +796,6 @@ async def kubernetes_node_info(
     )
 
 
-@app.get('/status_kubernetes')
-async def status_kubernetes(request: fastapi.Request) -> None:
-    """Gets Kubernetes status."""
-    await executor.schedule_request_async(
-        request_id=request.state.request_id,
-        request_name=request_names.RequestName.STATUS_KUBERNETES,
-        request_body=payloads.RequestBody(),
-        func=core.status_kubernetes,
-        schedule_type=requests_lib.ScheduleType.SHORT,
-    )
-
-
 @app.post('/list_accelerators')
 async def list_accelerators(
         request: fastapi.Request,
