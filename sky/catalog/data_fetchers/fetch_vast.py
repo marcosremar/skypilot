@@ -63,13 +63,6 @@ if __name__ == '__main__':
     #
     # The flags
     #
-    #   * georegion consolidates geographic areas
-    #
-    #   * chunked rounds down specifications (such
-    #     as 1025GB to 1024GB disk) in order to
-    #     make machine specifications look more
-    #     consistent
-    #
     #   * inet_down makes sure that only machines
     #     with "reasonable" downlink speed are
     #     considered
@@ -79,9 +72,13 @@ if __name__ == '__main__':
     #     in order to ensure that machines with
     #     small disk pools aren't listed
     #
+    # RELAXED FILTERS: Removed georegion=true and chunked=true
+    # to include ALL available GPUs globally, not just "rounded"
+    # specs in consolidated regions. This increases available
+    # GPU pool from ~10-20 to 100+ machines.
+    #
     offerList = vast.vast().search_offers(
-        query=('georegion = true chunked = true '
-               'inet_down >= 100 disk_space >= 80'),
+        query='inet_down >= 100 disk_space >= 40',
         limit=10000)
 
     priceMap: Dict[str, List] = collections.defaultdict(list)

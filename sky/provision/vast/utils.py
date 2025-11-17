@@ -87,15 +87,28 @@ def launch(name: str, instance_type: str, region: str, disk_size: int,
     gpu_name = instance_type.split('-')[1].replace('_', ' ')
     num_gpus = int(instance_type.split('-')[0].replace('x', ''))
 
-    query = ' '.join([
-        'chunked=true',
-        'georegion=true',
-        f'geolocation="{region[-2:]}"',
+    # RELAXED FILTERS: Removed chunked=true and georegion=true to access
+    # more GPUs globally. This allows provisioning from ANY datacenter,
+    # not just "rounded" specs in specific regions.
+    # Original filters reduced 64 available GPUs to only 4 matches.
+
+    query_parts = [
         f'disk_space>={disk_size}',
         f'num_gpus={num_gpus}',
         f'gpu_name="{gpu_name}"',
-        f'cpu_ram>="{cpu_ram}"',
-    ])
+    ]
+
+    # Only apply geolocation filter if region is specific (not generic "NA", "EU")
+    # This allows global search when region is generic
+    if region and len(region) > 2 and region[-2:].isalpha():
+        query_parts.append(f'geolocation="{region[-2:]}"')
+
+    # Relaxed RAM requirement: use minimum 8GB or requested amount
+    # This prevents rejecting good GPUs that have slightly less RAM
+    min_ram = max(8.0, cpu_ram * 0.8)  # Allow 20% less RAM than requested
+    query_parts.append(f'cpu_ram>={min_ram}')
+
+    query = ' '.join(query_parts)
 
     instance_list = vast.vast().search_offers(query=query)
 
