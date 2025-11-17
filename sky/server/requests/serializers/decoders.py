@@ -8,7 +8,6 @@ from sky import jobs as managed_jobs
 from sky import models
 from sky.catalog import common
 from sky.data import storage
-from sky.provision.kubernetes import utils as kubernetes_utils
 from sky.schemas.api import responses
 from sky.serve import serve_state
 from sky.server import constants as server_constants

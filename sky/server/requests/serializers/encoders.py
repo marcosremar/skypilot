@@ -3,7 +3,6 @@
 # pydantic models, so we can take advantage of model_dump_json of pydantic,
 # instead of implementing our own handlers.
 import base64
-import dataclasses
 import pickle
 import typing
 from typing import Any, Dict, List, Optional, Tuple, Union

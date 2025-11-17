@@ -17,7 +17,6 @@ from sky import core
 from sky import exceptions
 from sky import execution
 from sky import global_user_state
-from sky import provision as provision_lib
 from sky import sky_logging
 from sky import skypilot_config
 from sky import task as task_lib
@@ -30,7 +29,6 @@ from sky.jobs import constants as managed_job_constants
 from sky.jobs import state as managed_job_state
 from sky.jobs import utils as managed_job_utils
 from sky.metrics import utils as metrics_lib
-from sky.provision import common as provision_common
 from sky.schemas.api import responses
 from sky.serve import serve_state
 from sky.serve import serve_utils
