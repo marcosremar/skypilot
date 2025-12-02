@@ -136,16 +136,26 @@ if __name__ == '__main__':
                 instance['Price'] = '{:.2f}'.format(priceTarget)
                 toList.append(instance)
 
-        maxBid = max([x.get('SpotPrice') for x in toList])
+        # Calculate spot price as a discount from on-demand price
+        # Vast.ai spot/interruptible instances typically run at ~70-80% of on-demand
+        spot_discount = 0.75  # 25% discount for spot instances
+
+        maxBid = max([x.get('SpotPrice') or 0 for x in toList])
         for instance in toList:
             stub = f'{instance["InstanceType"]} {instance["Region"][-2:]}'
             if stub in seen:
                 printstub = f'{stub}#print'
                 if printstub not in seen:
-                    instance['SpotPrice'] = f'{maxBid:.2f}'
+                    # Set SpotPrice based on on-demand price with discount
+                    on_demand_price = float(instance['Price'])
+                    instance['SpotPrice'] = f'{on_demand_price * spot_discount:.2f}'
                     csvList.append(instance)
                     seen.add(printstub)
             else:
+                # BUGFIX: Also set SpotPrice for first instance of each type
+                on_demand_price = float(instance['Price'])
+                instance['SpotPrice'] = f'{on_demand_price * spot_discount:.2f}'
+                csvList.append(instance)
                 seen.add(stub)
 
     os.makedirs('vast', exist_ok=True)
